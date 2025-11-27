@@ -1,0 +1,31 @@
+#!/bin/bash
+#SBATCH --partition=compute              # Queue selection
+#SBATCH --job-name=CDF-00                # Job name
+#SBATCH --mail-type=end                  # Mail events (BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=nihar.paul@whoi.edu  # Where to send mail
+#SBATCH --nodes=1                        # Run a single task
+#SBATCH --time=24:00:00                  # Time limit hrs:min:sec
+#SBATCH --error=%x-%J-%N.err             # Stderr
+#SBATCH --output=%x-%J-%N.out            # Stdout
+
+
+
+export OMP_NUM_THREADS=8
+
+cd /scratch/nihar.paul/psom/code
+
+# load modules if needed
+module load intel/2018
+module load netcdf/intel/4.6.1
+ 
+echo "================Job Info================="
+echo "Running on node(s): $SLURM_NODELIST starting in: `pwd`"
+echo "==============Module Info================"
+echo -n ""; (module list)2>&1
+echo "========================================="
+
+date
+
+./exe/nh_cdf_00 < cdf_00/namelist_cdf_00
+
+date
